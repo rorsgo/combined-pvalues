@@ -46,9 +46,9 @@ def main():
                  "for a region to be reported in final output. "
                  " this requires the input bed file to have chrom, start, "
                  "end, 't' columns", type=int, default=None)
-    p.add_argument("--annotate", help="annotate with a gene table from this db " \
+    p.add_argument("--annotate", help="annotate with a gene table from this db "
             "in UCSC (e.g. hg19) requires cruzdb", default=None)
-    p.add_argument("--table", help="annotate with this gene table from a db " \
+    p.add_argument("--table", help="annotate with this gene table from a db "
             "in UCSC (default is refGene) requires cruzdb", default='refGene')
 
     p.add_argument('bed_files', nargs='+', help='sorted bed file to process')
