@@ -59,6 +59,8 @@ If you do not have `numpy` and `scipy` installed. Please use anaconda
 from: http://continuum.io/downloads
 which is a complete python distribution with those modules included.
 
+### Method 1
+
 run::
 
     sudo python setup.py install
@@ -74,6 +76,27 @@ E.g.
 corresponds to the command::
 
     comb-p peaks
+
+### Method 2
+
+Using pip to install the dependencies from the project root folder:
+
+```pip3 install -r requirements.txt```
+
+Create a directory in your $HOME directory called `bin`:
+
+```mkdir -p ~/bin```
+
+Write in the last line of `.bash_profile` or `.bashrc` file, an alias to run the `comb-p` binary file:
+
+```alias comb-p=~/bin/combined-pvalues/cpv/comb-p```
+
+Refresh the `.bash_profile` or `.bashrc` file:
+
+```source ~/.bashrc```
+```source ~/.bash_profile```
+
+Now you can just type `comb-p` to use the software.
 
 
 Invocation
