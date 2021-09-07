@@ -35,42 +35,38 @@ If you do not have `numpy` and `scipy` installed. Please use [anaconda](http://c
 </br>
 
 ## Method 1
----
 
 Go to the `combined-pvalues` project root folder  and, into a terminal, `run`:
 
-```sudo python setup.py install```
+    sudo python setup.py install
 
 to have `comb-p` installed on your PATH.
 Otherwise, you can use the python scripts in the `cpv` subdirectory.
 
-```python cpv/peaks.py```
+    python cpv/peaks.py
 
 corresponds to the command:
 
- ```comb-p peaks```
-
-</br>
+    comb-p peaks
 
 ## Method 2
----
 
 Using pip to install the dependencies from the `combined-pvalues` project root folder:
 
-```pip3 install -r requirements.txt```
+    pip3 install -r requirements.txt
 
 Create a directory in your $HOME directory called `bin`:
 
-```mkdir -p ~/bin```
+    mkdir -p ~/bin
 
 Write in the last line of `.bash_profile` or `.bashrc` file, an alias to run the `comb-p` binary file:
 
-```alias comb-p=python ~/bin/combined-pvalues/cpv/comb-p```
+    alias comb-p=python ~/bin/combined-pvalues/cpv/comb-p
 
 Refresh the `.bash_profile` or `.bashrc` file:
 
-```source ~/.bashrc```
-```source ~/.bash_profile```
+    source ~/.bashrc
+    source ~/.bash_profile
 
 Now you can just type `comb-p` it as a command-line software.
 
@@ -111,9 +107,10 @@ Commands below give finer control over each step.
 
 The program is run with:
 
-```$ comb-p```</br>
-or</br>
-```$ python3 ./combined-pvalues/cpv/comb-p```
+    $ comb-p
+::
+
+    $ python3 ./combined-pvalues/cpv/comb-p
 
 This message is displayed:
 
@@ -170,18 +167,19 @@ Each module is described in detail below.
 </br>
 
 ## Example
----
 
     Find and merge peaks/troughs within a bed file
 
 ::
 
-     $ python cpv/peaks.py --seed 0.05 --dist 1000 data/pvals.bed > data/pvals.peaks.bed
+    $ python cpv/peaks.py --seed 0.05 --dist 1000 data/pvals.bed > data/pvals.peaks.bed
 
 This will seed peaks with values < 0.05 and merge any adjacent values
 within 1KB. The `output` is a `BED file` containing the extent of the troughs.
 If the argument `--invert` is specified, the program will find look for
 values larger than the seed.
+
+</br>
 
 # Pipeline
 
@@ -198,7 +196,6 @@ Note that any of these steps can be run independently, to do multiple
 testing correction on a BED file with p-values, just call the `fdr.py` script.
 
 ## ACF
----
 
 To calculate autocorrelation from 1 to 500 bases with a stepsize of 50
 on the p-values in column 5, the command would look something like:
@@ -261,8 +258,6 @@ p-value in the region.
 
 The cpv/peaks.py script is quite flexible. Run it without arguments for
 further usage.
-
-</br>
 
 ## Region P-values (region_p)
 
