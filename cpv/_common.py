@@ -89,9 +89,9 @@ def genomic_control(pvals):
     """
     calculate genomic control factor, lambda
     >>> genomic_control([0.25, 0.5, 0.75])
-    1.0000800684096998
+    1.0000800684096989
     >>> genomic_control([0.025, 0.005, 0.0075])
-    15.715846578113579
+    15.715846578113577
     """
     from scipy import stats
     import numpy as np
@@ -102,7 +102,7 @@ def genome_control_adjust(pvals):
     """
     adjust p-values by the genomic control factor, lambda
     >>> genome_control_adjust([0.4, 0.01, 0.02])
-    array([ 0.8072264 ,  0.45518836,  0.50001716])
+    array([0.8072264 , 0.45518836, 0.50001716])
     """
     import numpy as np
     from scipy import stats
