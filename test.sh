@@ -11,7 +11,7 @@ d=$(wc -l t | awk '{ print $1}')
 test $d -ne 1 && echo "ERROR" $d
 
 ##################################################################
-python ./cpv/peaks.py --dist 1 --seed 0.02 data/close_peaks.bed > t
+python ./cpv/peaks.py -c 4 --dist 1 --seed 0.02 data/close_peaks.bed > t
 
 python ./cpv/pipeline.py
 d=$(wc -l t | awk '{ print $1}')
