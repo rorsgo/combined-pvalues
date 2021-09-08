@@ -32,7 +32,8 @@ SEE: https://github.com/brentp/combined-pvalues for documentation
 
     # the action is the first argument.
     action = sys.argv.pop(1)
-    module = getattr(__import__('cpv', fromlist=[action]), action)
+    module = import cpv
+    # module = getattr(__import__('cpv', fromlist=[action]), action)
     module.main()
 
 if __name__ == "__main__":
