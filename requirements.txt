@@ -2,4 +2,3 @@ numpy
 scipy
 toolshed
 cruzdb
-multiprocessing==2.6.2.1
