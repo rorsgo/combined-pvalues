@@ -38,7 +38,7 @@ def stouffer_liptak(pvals, sigma=None):
         raise Exception("bad values: %s" % pvals[list(np.isinf(qvals))])
 
     # dont do the correction unless sigma is specified.
-    result = {"OK": True}
+    result = {}
     if not sigma is None:
         try:
             C = chol(sigma)
@@ -57,7 +57,7 @@ def stouffer_liptak(pvals, sigma=None):
         print("BAD:", pvals, sigma, file=sys.stderr)
         pstar = np.median(pvals)
         result["OK"] = True
-    result.update({"C": Cp, "p": pstar})
+    result.update({"p": pstar, "C": Cp, "OK": True})
     return result
 
 def z_score_combine(pvals, sigma):
