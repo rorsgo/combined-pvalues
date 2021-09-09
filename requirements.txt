@@ -3,3 +3,4 @@ scipy
 toolshed
 cruzdb
 interlap==0.2.7
+pybedtools
