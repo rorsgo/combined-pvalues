@@ -2,10 +2,14 @@ import unittest
 import os.path as op
 import sys
 import numpy as np
+import importlib
 HERE = op.abspath(op.dirname(__file__))
 sys.path.insert(0, op.abspath(op.join(HERE, "..", "..")))
 from cpv import stouffer_liptak as sl
-acf = __import__("cpv.acf", fromlist=["acf"])
+from cpv import acf as acf
+# import cpv.acf as acf
+# acf = __import__("cpv.acf", fromlist=["acf"])
+# acf = importlib.import_module("acf", package="cpv")
 
 BED = op.join(HERE, "data", "pvals.bed")
 
