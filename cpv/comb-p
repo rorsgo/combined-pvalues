@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import sys
+
 __actions = ("acf", "slk", "fdr", "peaks", "region_p", "hist", "splot",
              "manhattan", "pipeline", "filter")
+
 def main():
     if len(sys.argv) == 1 \
             or sys.argv[1] in ("-h", "--help") \
@@ -32,8 +34,7 @@ SEE: https://github.com/brentp/combined-pvalues for documentation
 
     # the action is the first argument.
     action = sys.argv.pop(1)
-    print(action, sys.argv[0])
-    module = getattr(__import__('cpv', fromlist=[action]), action)
+    module = getattr(__import__('cpv.comb-p', fromlist=[action]), action)
     module.main()
 
 if __name__ == "__main__":
