@@ -3,10 +3,10 @@ import sys
 import array
 import os.path as op
 import toolshed as ts
+from _common import get_col_num
 
 def main():
     import argparse
-    from ._common import get_col_num
 
     p = argparse.ArgumentParser(description=__doc__,
                    formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -69,14 +69,14 @@ def main():
 
     col_num = get_col_num(args.c, args.bed_files[0])
     return pipeline(col_num, args.step,
-            args.dist, args.acf_dist, args.prefix,
-            args.threshold, args.seed, args.table,
-            args.bed_files,
-            region_filter_p=args.region_filter_p,
-            region_filter_n=args.region_filter_n,
-            genome_control=args.genomic_control,
-            db=args.annotate,
-            use_fdr=not args.no_fdr)
+                    args.dist, args.acf_dist, args.prefix,
+                    args.threshold, args.seed, args.table,
+                    args.bed_files,
+                    region_filter_p=args.region_filter_p,
+                    region_filter_n=args.region_filter_n,
+                    genome_control=args.genomic_control,
+                    db=args.annotate,
+                    use_fdr=not args.no_fdr)
 
 def pipeline(col_num, step, dist, acf_dist, prefix, threshold, seed, table,
         bed_files, mlog=True, region_filter_p=1, region_filter_n=None,
@@ -113,7 +113,7 @@ def pipeline(col_num, step, dist, acf_dist, prefix, threshold, seed, table,
         print(" ".join(sys.argv[1:]) + "\n", file=fh)
         import datetime
         print("date: %s" % datetime.datetime.today(), file=fh)
-        from .__init__ import __version__
+        from __init__ import __version__
         print("version:", __version__, file=fh)
 
     with open(prefix + ".acf.txt", "w") as fh:

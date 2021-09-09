@@ -5,7 +5,7 @@ and check for uniformity with the chisq test.
 import argparse
 import numpy as np
 import toolshed as ts
-from ._common import pairwise, get_col_num
+from _common import pairwise, get_col_num
 
 def run(args):
     col_num = get_col_num(args.c)
@@ -13,10 +13,10 @@ def run(args):
                   for l in ts.nopen(args.file) if l[0] != "#")
 
     pvals = np.array([float(b[col_num]) for b in file_iter])
-    kwargs = {"bins": args.n} if args.n else {}
-    hist, bins = np.histogram(pvals, normed=True, **kwargs)
-    xlabels = "|".join("%.2f-%.2f" % b for b in pairwise(bins))
-    hist, bins = np.histogram(pvals, normed=False, **kwargs)
+    kwargs = {"bin_edges": args.n} if args.n else {}
+    hist, bin_edges = np.histogram(pvals, normed=True, **kwargs)
+    xlabels = "|".join("%.2f-%.2f" % b for b in pairwise(bin_edges))
+    hist, bin_edges = np.histogram(pvals, normed=False, **kwargs)
 
     print("# median: %.3f mean:%.3f; std: %.3f min:%.3f; max:%.3f" % (
         np.median(pvals), pvals.mean(), pvals.std(), pvals.min(), pvals.max()))
@@ -29,7 +29,7 @@ def run(args):
     except ImportError:
         pass
     print("#bin_start\tbin_end\tn")
-    for bin, val in zip(pairwise(bins), hist):
+    for bin, val in zip(pairwise(bin_edges), hist):
         print("%.2f\t%.2f\t%i" % (bin[0], bin[1], val))
 
 
@@ -38,7 +38,7 @@ def main():
                    formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("-c", dest="c", help="column number for the histogram",
                    type=int, default=-1)
-    p.add_argument("-n", dest="n", help="number of bins in the histogram",
+    p.add_argument("-n", dest="n", help="number of bin_edges in the histogram",
                    type=int, default=None)
     p.add_argument('file', help='bed file to correct')
     args = p.parse_args()
