@@ -8,20 +8,22 @@ from array import array
 import sys
 import numpy as np
 import scipy.stats as ss
+
 try:
     from itertools import groupby, izip, chain
 except ImportError:
     from itertools import groupby, chain
     izip = zip
     xrange = range
-from cpv._common import bediter, pairwise, get_col_num, get_map
 
+_common = __import__("_common", globals(), ["*"], level=0)
+# from _common import bediter, pairwise, get_col_num, get_map
 
 def create_acf_list(lags):
     acfs = []
     if len(lags) == 1:
         lags.append(lags[0])
-    for lag_min, lag_max in pairwise(lags):
+    for lag_min, lag_max in _common.pairwise(lags):
         acfs.append((lag_min, lag_max,
             # array uses less memory than list.
             {"x": array("f"), "y": array("f")}))
@@ -90,14 +92,14 @@ def acf(fnames, lags, col_num0, partial=True, simple=False, mlog=True):
     from multiprocessing import set_start_method
     set_start_method("fork", force=True)
     
-    imap = get_map()
+    imap = _common.get_map()
 
     arg_list = [] # chaining
     for fname in fnames:
         # groupby chromosome.
         arg_list = chain(arg_list, ((list(chromlist), lags) for chrom, \
                     chromlist in \
-                    groupby(bediter(fname, col_num0), lambda a: a["chrom"])))
+                    groupby(_common.bediter(fname, col_num0), lambda a: a["chrom"])))
 
     unmerged_acfs = [] # separated by chrom. need to merge later.
     for chrom_acf in imap(_acf_by_chrom, arg_list):
@@ -144,7 +146,7 @@ def run(args):
     d[1] += 1 # adjust for non-inclusive end-points...
     lags = range(*d)
 
-    acf_vals = acf(args.files, lags, get_col_num(args.c), partial=(not
+    acf_vals = acf(args.files, lags, _common.get_col_num(args.c), partial=(not
                                                             args.full))
     write_acf(acf_vals, sys.stdout)
 
