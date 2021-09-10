@@ -26,8 +26,7 @@ jobs:
 
       - name: Create bedtools alias and make it available to the container
         run: |
-          echo $PWD
-          alias bedtools="$PWD/cpv/bin/bedtools"
+          alias bedtools="~/cpv/bin/bedtools"
           chmod +x ./cpv/bin/bedtools
 
       - name: Execute test.sh script
