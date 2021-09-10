@@ -11,8 +11,10 @@ d=$(wc -l t | awk '{ print $1}')
 test $d -ne 1 && echo "ERROR" $d
 
 ##################################################################
+echo "# peaks"
 python cpv/peaks.py -c 4 --dist 1 --seed 0.02 data/close_peaks.bed > t
 
+echo "# pipeline"
 python cpv/pipeline.py
 d=$(wc -l t | awk '{ print $1}')
 test $d -ne 2 && echo "ERROR" $d
@@ -25,9 +27,12 @@ for dist in 1 1000 10000000; do
     test $d -ne 1 && echo "ERROR" $d
 done
 
+echo "# hist"
 python cpv/comb-p hist -c 5 ./cpv/tests/data/pvals.bed > t
 
 # unittests.
+echo "# unittests"
+
 python cpv/tests/test.py
 
 # the sum of the partials should add up the the final number in
@@ -37,10 +42,13 @@ psum=$(python cpv/acf.py ./cpv/tests/data/pvals.bed -c 5 -d 1:500:50 \
 npsum=$(python cpv/acf.py ./cpv/tests/data/pvals.bed -c 5 -d 1:500:50 --full \
     | awk '(NR > 1){ s=$4 }END{ print s }')
 
+echo "# test $psum"
 test $psum -ne $npsum && echo "ERROR in ACF"
 
 
 # test the acf output is as expected.
+echo "# test the acf output is as expected"
+
 md=$(python cpv/acf.py -d 1:240:60 ./cpv/tests/data/pvals.bed -c 5 | md5sum \
     | awk '{ print $1 }')
 
@@ -55,5 +63,6 @@ fi
 
 rm t
 set -ex
+echo "# python cpv/comb-p pipeline -c pvalue -p out --seed 0.05 --dist 1000 --region-filter-p 0.1 --region-filter-n 4 examples/file.bed"
 python cpv/comb-p pipeline -c pvalue -p out --seed 0.05 --dist 1000 --region-filter-p 0.1 --region-filter-n 4 examples/file.bed
 

@@ -14,7 +14,7 @@ def run(args):
 
     pvals = np.array([float(b[col_num]) for b in file_iter])
     kwargs = {"bin_edges": args.n} if args.n else {}
-    hist, bin_edges = np.histogram(pvals, normed=True, **kwargs)
+    hist, bin_edges = np.histogram(pvals, **kwargs)
     xlabels = "|".join("%.2f-%.2f" % b for b in pairwise(bin_edges))
     hist, bin_edges = np.histogram(pvals, normed=False, **kwargs)
 

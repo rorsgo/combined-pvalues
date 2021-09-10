@@ -15,10 +15,7 @@ except ImportError:
     from itertools import groupby, chain
     izip = zip
     xrange = range
-
-# _common = __import__("_common", globals(), ["*"], level=0)
-# from _common import bediter, pairwise, get_col_num, get_map
-from _common import bediter, pairwise, get_col_num, get_map
+from _common import pairwise, bediter, get_map, get_col_num
 
 def create_acf_list(lags):
     acfs = []

@@ -2,14 +2,10 @@ import unittest
 import os.path as op
 import sys
 import numpy as np
-import importlib
+
 HERE = op.abspath(op.dirname(__file__))
 sys.path.insert(0, op.abspath(op.join(HERE, "..", "..")))
 from cpv import stouffer_liptak as sl
-from cpv import acf as acf
-# import cpv.acf as acf
-# acf = __import__("cpv.acf", fromlist=["acf"])
-# acf = importlib.import_module("acf", package="cpv")
 
 BED = op.join(HERE, "data", "pvals.bed")
 
@@ -17,9 +13,12 @@ class CPVTest(unittest.TestCase):
     bed = BED
 
 class TestACF(CPVTest):
+
     ranges = [1, 50, 100, 150]
 
     def test_acf(self):
+        mod = __import__("cpv", globals(), fromlist=[], level=1)
+        acf = getattr(mod, "acf")
         res = acf.acf((self.bed,), self.ranges, 5)
         self.assertTrue(isinstance(res, list))
         self.assertEqual(len(res), len(self.ranges) - 1)
