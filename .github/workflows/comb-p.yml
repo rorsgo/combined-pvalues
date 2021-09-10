@@ -26,10 +26,10 @@ jobs:
 
       - name: Create bedtools alias and make it available to the container
         run: |
-          alias bedtoold="./bin/bedtools"
-          chmod +x ./bin/bedtools
           pwd
           ls -al
+          alias bedtools="./bin/bedtools"
+          chmod +x ./bin/bedtools
 
       - name: Execute test.sh script
         run: ./test.sh
