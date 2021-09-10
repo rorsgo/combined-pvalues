@@ -24,12 +24,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Create bedtools alias and make it available to the container
+      - name: Execute test.sh script
         run: |
-          pwd
-          ls -al
           alias bedtools="./cpv/bin/bedtools"
           chmod +x ./cpv/bin/bedtools
-
-      - name: Execute test.sh script
-        run: ./test.sh
+          ./test.sh
