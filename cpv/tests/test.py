@@ -17,8 +17,9 @@ class TestACF(CPVTest):
     ranges = [1, 50, 100, 150]
 
     def test_acf(self):
-        mod = __import__("cpv", globals(), fromlist=[], level=1)
-        acf = getattr(mod, "acf")
+        import cpv.acf as acf
+        from importlib import reload
+        reload(acf)
         res = acf.acf((self.bed,), self.ranges, 5)
         self.assertTrue(isinstance(res, list))
         self.assertEqual(len(res), len(self.ranges) - 1)
