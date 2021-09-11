@@ -26,8 +26,8 @@ jobs:
 
       - name: Create bedtools alias and make it available to the container
         run: |
-          alias bedtools="~/cpv/bin/bedtools"
-          chmod +x ./cpv/bin/bedtools
+          alias bedtools="/home/runner/work/combined-pvalues/cpv/bin/bedtools"
+          chmod +x /home/runner/work/combined-pvalues/cpv/bin/bedtools
 
       - name: Execute test.sh script
         run: ./test.sh
