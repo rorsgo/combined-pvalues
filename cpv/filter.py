@@ -90,7 +90,7 @@ def filter(p_bed, region_bed, max_p=None, region_p=None, p_col_name="P.Value",
 
     j = 0
     for group, plist in groupby(
-            ts.reader('|bedtools intersect -b %(p_bed)s \
+            ts.reader('|./bin/bedtools intersect -b %(p_bed)s \
                          -a %(region_bed)s -wo %(header)s' % a,
             header=rh + ph), itemgetter('chrom','start','end')):
         plist = list(plist)
