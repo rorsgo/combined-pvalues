@@ -26,6 +26,5 @@ jobs:
 
       - name: Execute test.sh script
         run: |
-          alias bedtools="/home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools"
           chmod +x /home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools
           ./test.sh
