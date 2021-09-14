@@ -100,135 +100,74 @@ def filter(p_bed, region_bed, max_p=None, region_p=None, p_col_name="P.Value",
     a['p_bed'] = fix_bed(a['p_bed'])
     a['header'] = ""
 
-    bedtoold_path =checkFileExistance("/home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools")
+    bedtools_path = checkFileExistance("/home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools")
+    if bedtools_path:
+        bedtools_path = "/home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools"
+    else:
+        bedtools_path = "bedtools"
+
     j = 0
-    if bedtoold_path:
-        for group, plist in groupby(
-                ts.reader('|\
-                    /home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools \
-                    intersect -b %(p_bed)s \
-                    -a %(region_bed)s -wo %(header)s' % a,
-                header=rh + ph), itemgetter('chrom','start','end')):
-            plist = list(plist)
+    for group, plist in groupby(
+            ts.reader('|{0} intersect -b %(p_bed)s \
+                -a %(region_bed)s -wo %(header)s'.format(bedtools_path) % a,
+            header=rh + ph), itemgetter('chrom','start','end')):
+        plist = list(plist)
 
-            if region_p:
-                r = plist[0] # first cols are all the same
-                region_p_key = 'slk_sidak_p' if 'slk_sidak_p' in r \
-                                            else 'z_sidak_p' if 'z_sidak_p' in r \
-                                            else None
-                if region_p_key is None: raise Exception
-                if float(r[region_p_key]) > region_p:
-                    continue
+        if region_p:
+            r = plist[0] # first cols are all the same
+            region_p_key = 'slk_sidak_p' if 'slk_sidak_p' in r \
+                                        else 'z_sidak_p' if 'z_sidak_p' in r \
+                                        else None
+            if region_p_key is None: raise Exception
+            if float(r[region_p_key]) > region_p:
+                continue
 
-            try:
-                plist = [x for x in plist if (int(x['start']) <= int(x['pstart']) <= int(x['pend'])) and ((int(x['start']) <= int(x['pend']) <= int(x['end'])))]
-            except:
-                print(plist)
-                raise
-            tscores = [float(row['pt']) for row in plist if 'pt' in row]
+        try:
+            plist = [x for x in plist if (int(x['start']) <= int(x['pstart']) <= int(x['pend'])) and ((int(x['start']) <= int(x['pend']) <= int(x['end'])))]
+        except:
+            print(plist)
+            raise
+        tscores = [float(row['pt']) for row in plist if 'pt' in row]
 
-            if max_p:
-                if any(float(row['p' + p_col_name]) > max_p for row in plist):
-                    continue
+        if max_p:
+            if any(float(row['p' + p_col_name]) > max_p for row in plist):
+                continue
 
-            ngt05  = sum(1 for row in plist if float(row['p' + p_col_name]) > 0.05)
+        ngt05  = sum(1 for row in plist if float(row['p' + p_col_name]) > 0.05)
 
-            # logic to try to find t and coef headers and skip if not found
-            extra_header = []
-            extra = []
-            if tscores:
-                tpos = sum(1 for ts in tscores if ts > 0)
-                tneg = sum(1 for ts in tscores if ts < 0)
-                tpn = "%i/%i" % (tpos, tneg)
+        # logic to try to find t and coef headers and skip if not found
+        extra_header = []
+        extra = []
+        if tscores:
+            tpos = sum(1 for ts in tscores if ts > 0)
+            tneg = sum(1 for ts in tscores if ts < 0)
+            tpn = "%i/%i" % (tpos, tneg)
 
-                tsum = str(sum(ts for ts in tscores))
-                extra_header += ["t.pos/t.neg", "t.sum"]
-                extra += [tpn, tsum]
-            else:
-                tsum = tpn = "NA"
-            if 'p' + coef_col_name not in plist[0] and 'pcoefficient' in plist[0]:
-                coef_col_name = 'coefficient'
-            if 'p' + coef_col_name in plist[0]:
-                coef = (sum(float(row['p' + coef_col_name]) for row in plist) /
-                                        len(plist))
+            tsum = str(sum(ts for ts in tscores))
+            extra_header += ["t.pos/t.neg", "t.sum"]
+            extra += [tpn, tsum]
+        else:
+            tsum = tpn = "NA"
+        if 'p' + coef_col_name not in plist[0] and 'pcoefficient' in plist[0]:
+            coef_col_name = 'coefficient'
+        if 'p' + coef_col_name in plist[0]:
+            coef = (sum(float(row['p' + coef_col_name]) for row in plist) /
+                                    len(plist))
 
-                # since we probably had the data logit transformed, here we
-                # do the inverse and subtract 0.5 since ilogit(0) == 0.5
-                icoef = (sum(ilogit(float(row['p' + coef_col_name])) for row in plist) /
-                                        len(plist)) - 0.5
-                extra_header += ["avg.diff", "ilogit.diff"]
-                extra += ["%.3f" % coef, "%.3f" % icoef]
-            else:
-                coef = icoef = float('nan')
+            # since we probably had the data logit transformed, here we
+            # do the inverse and subtract 0.5 since ilogit(0) == 0.5
+            icoef = (sum(ilogit(float(row['p' + coef_col_name])) for row in plist) /
+                                    len(plist)) - 0.5
+            extra_header += ["avg.diff", "ilogit.diff"]
+            extra += ["%.3f" % coef, "%.3f" % icoef]
+        else:
+            coef = icoef = float('nan')
 
-            frow = [plist[0][h] for h in rh] + extra
-            if j == 0:
-                yield rh + extra_header
-                j = 1
-            yield frow
-    else:    
-        for group, plist in groupby(
-                ts.reader('|bedtools \
-                    intersect -b %(p_bed)s \
-                    -a %(region_bed)s -wo %(header)s' % a,
-                header=rh + ph), itemgetter('chrom','start','end')):
-            plist = list(plist)
-
-            if region_p:
-                r = plist[0] # first cols are all the same
-                region_p_key = 'slk_sidak_p' if 'slk_sidak_p' in r \
-                                            else 'z_sidak_p' if 'z_sidak_p' in r \
-                                            else None
-                if region_p_key is None: raise Exception
-                if float(r[region_p_key]) > region_p:
-                    continue
-
-            try:
-                plist = [x for x in plist if (int(x['start']) <= int(x['pstart']) <= int(x['pend'])) and ((int(x['start']) <= int(x['pend']) <= int(x['end'])))]
-            except:
-                print(plist)
-                raise
-            tscores = [float(row['pt']) for row in plist if 'pt' in row]
-
-            if max_p:
-                if any(float(row['p' + p_col_name]) > max_p for row in plist):
-                    continue
-
-            ngt05  = sum(1 for row in plist if float(row['p' + p_col_name]) > 0.05)
-
-            # logic to try to find t and coef headers and skip if not found
-            extra_header = []
-            extra = []
-            if tscores:
-                tpos = sum(1 for ts in tscores if ts > 0)
-                tneg = sum(1 for ts in tscores if ts < 0)
-                tpn = "%i/%i" % (tpos, tneg)
-
-                tsum = str(sum(ts for ts in tscores))
-                extra_header += ["t.pos/t.neg", "t.sum"]
-                extra += [tpn, tsum]
-            else:
-                tsum = tpn = "NA"
-            if 'p' + coef_col_name not in plist[0] and 'pcoefficient' in plist[0]:
-                coef_col_name = 'coefficient'
-            if 'p' + coef_col_name in plist[0]:
-                coef = (sum(float(row['p' + coef_col_name]) for row in plist) /
-                                        len(plist))
-
-                # since we probably had the data logit transformed, here we
-                # do the inverse and subtract 0.5 since ilogit(0) == 0.5
-                icoef = (sum(ilogit(float(row['p' + coef_col_name])) for row in plist) /
-                                        len(plist)) - 0.5
-                extra_header += ["avg.diff", "ilogit.diff"]
-                extra += ["%.3f" % coef, "%.3f" % icoef]
-            else:
-                coef = icoef = float('nan')
-
-            frow = [plist[0][h] for h in rh] + extra
-            if j == 0:
-                yield rh + extra_header
-                j = 1
-            yield frow
+        frow = [plist[0][h] for h in rh] + extra
+        if j == 0:
+            yield rh + extra_header
+            j = 1
+        yield frow
 
 if __name__ == "__main__":
     import doctest
