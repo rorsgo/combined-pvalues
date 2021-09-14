@@ -100,11 +100,9 @@ def filter(p_bed, region_bed, max_p=None, region_p=None, p_col_name="P.Value",
     a['p_bed'] = fix_bed(a['p_bed'])
     a['header'] = ""
 
-    bedtools_path = checkFileExistance("/home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools")
-    if bedtools_path:
-        bedtools_path = "/home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools"
-    else:
-        bedtools_path = "bedtools"
+    bedtools_path = "/home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools" \
+        if checkFileExistance("/home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools") \
+        else "bedtools"
 
     j = 0
     for group, plist in groupby(
