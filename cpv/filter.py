@@ -16,6 +16,7 @@ except NameError:
 from math import exp
 import atexit
 import os
+import sys
 
 import toolshed as ts
 
@@ -40,6 +41,17 @@ def fix_bed(fname):
     fh.close()
     atexit.register(os.unlink, tname)
     return tname
+
+def checkFileExistance(filePath):
+    try:
+        with open(filePath, 'r') as f:
+            return True
+    except FileNotFoundError as e:
+        return False
+    except IOError as e:
+        return False
+
+
 
 
 def main():
@@ -88,18 +100,22 @@ def filter(p_bed, region_bed, max_p=None, region_p=None, p_col_name="P.Value",
     a['p_bed'] = fix_bed(a['p_bed'])
     a['header'] = ""
 
+    bedtools_path = "/home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools" \
+        if checkFileExistance("/home/runner/work/combined-pvalues/combined-pvalues/cpv/bin/bedtools") \
+        else "bedtools"
+
     j = 0
     for group, plist in groupby(
-            ts.reader('|bedtools intersect -b %(p_bed)s \
-                         -a %(region_bed)s -wo %(header)s' % a,
+            ts.reader('|{0} intersect -b %(p_bed)s \
+                -a %(region_bed)s -wo %(header)s'.format(bedtools_path) % a,
             header=rh + ph), itemgetter('chrom','start','end')):
         plist = list(plist)
 
         if region_p:
             r = plist[0] # first cols are all the same
             region_p_key = 'slk_sidak_p' if 'slk_sidak_p' in r \
-                                         else 'z_sidak_p' if 'z_sidak_p' in r \
-                                         else None
+                                        else 'z_sidak_p' if 'z_sidak_p' in r \
+                                        else None
             if region_p_key is None: raise Exception
             if float(r[region_p_key]) > region_p:
                 continue

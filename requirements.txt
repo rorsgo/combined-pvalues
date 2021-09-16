@@ -2,4 +2,5 @@ numpy
 scipy
 toolshed
 cruzdb
-multiprocessing
+interlap==0.2.7
+pybedtools

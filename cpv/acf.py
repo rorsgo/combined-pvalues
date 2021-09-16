@@ -8,14 +8,18 @@ from array import array
 import sys
 import numpy as np
 import scipy.stats as ss
+
 try:
     from itertools import groupby, izip, chain
 except ImportError:
     from itertools import groupby, chain
     izip = zip
     xrange = range
-from cpv._common import bediter, pairwise, get_col_num, get_map
 
+try:
+    from _common import pairwise, bediter, get_map, get_col_num
+except ImportError:
+    from cpv._common import pairwise, bediter, get_map, get_col_num
 
 def create_acf_list(lags):
     acfs = []
