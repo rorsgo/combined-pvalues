@@ -36,7 +36,9 @@ The tool `comb-p` requires python versions 3.7+.
 
 Go to the `combined-pvalues` project root folder  and, into a terminal, `run`:
 
-    sudo python3 setup.py install
+    $ sudo python3 setup.py build
+    
+    $ sudo python3 setup.py install
 
 to have `comb-p` installed on your PATH.
 Otherwise, you can use the python scripts in the `cpv` subdirectory.
