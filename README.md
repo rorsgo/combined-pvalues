@@ -14,8 +14,8 @@ It includes an explanation of 3 examples in the examples directory of this repos
 # QuickStart
 
 * <a href="#installation">Installation</a>
-    * <a href="#method-1">Method 1</a>
-    * <a href="#method-2">Method 2</a>
+    * <a href="#method-1">Setup.py</a>
+    * <a href="#method-2">Virtual Environment</a>
 * <a href="#usage">Usage</a>
     * <a href="#explanation">Explanation</a>
     * <a href="#example">Example</a>
@@ -28,47 +28,75 @@ It includes an explanation of 3 examples in the examples directory of this repos
 
 # Installation
 
-The tool `comb-p` requires python versions 2.7 or 3.7+.
-
-If you do not have `numpy` and `scipy` installed. Please use [anaconda](http://continuum.io/downloads) which is a complete python distribution with those modules included, [bioconda](https://conda.anaconda.org/Bioconda).
+The tool `comb-p` requires python versions 3.7+.
 
 </br>
 
-## Method 1
+## Setup.py
 
 Go to the `combined-pvalues` project root folder  and, into a terminal, `run`:
 
-    sudo python setup.py install
+    sudo python3 setup.py install
 
 to have `comb-p` installed on your PATH.
 Otherwise, you can use the python scripts in the `cpv` subdirectory.
 
-    python cpv/peaks.py
+    python3 cpv/peaks.py
 
 corresponds to the command:
 
     comb-p peaks
 
-## Method 2
+## Virtual Environment
 
-Using pip to install the dependencies from the `combined-pvalues` project root folder:
+Using pip3 to install the dependencies in a `virtual environment`, first we will execute a python command inside the projects folder:
 
-    pip3 install -r requirements.txt
+    $ python3 -m venv combined_env
 
-Create a directory in your $HOME directory called `bin`:
+The directory tree should look like the schema below:
 
-    mkdir -p ~/bin
+    combined-pvalues
+    |- cpv
+    |  |- comb-p
+    |  |- ...
+    |- combined_env
+    |  |- bin
+    |  |  |- activate
+    |  |  |- ...
+    |  |- include
+    |  |- lib
+    |  |- lib64
+    |  |- share
+    |  |- pyenv.cfg
+    |- data
+    |- examples
+    |- manuscript
+    |- scripts
+    |- ...
 
-Write in the last line of `.bash_profile` or `.bashrc` file, an alias to run the `comb-p` binary file:
+To activate the `virtual environment` that we've created above, type in the terminal:
 
-    alias comb-p=python ~/bin/combined-pvalues/cpv/comb-p
+    $ source combined_env/bin/activate
 
-Refresh the `.bash_profile` or `.bashrc` file:
 
-    source ~/.bashrc
-    source ~/.bash_profile
+With the virtual environment enabled, let's install the packages typing the command:
 
-Now you can just type `comb-p` it as a command-line software.
+    (combined_env) $ sudo pip3 install -r requirements.txt
+
+After the successful installation you will be able to execute the `comb-p` file inside the `cpv` folder.
+
+Go to `cpv` directory and change the file mode to give to it the right permissions, type:
+
+    $ cd cpv
+    $ chmod +x comb-p
+
+Finally, make a symbolic link of the comb-p file to access the program from a $PATH directory.
+
+    ln -s /<path>/<to>/<file> /<path>/<folder> 
+
+    Ex:
+
+    $ sudo ln -s ~/combined-pvalues/cpv/comb-p /usr/local/bin
 
 </br>
 
