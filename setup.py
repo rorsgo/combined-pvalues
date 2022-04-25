@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-import ez_setup
-ez_setup.use_setuptools()
-
+#!/usr/bin/env python3
 
 from setuptools import setup
 import cpv
@@ -12,11 +9,13 @@ setup(name='cpv',
       description='combine p-values',
       author='Brent Pedersen',
       author_email='bpederse@gmail.com',
+      maintainer='Rodrigo Santos',
+      maintainer_email='rorvts@gmail.com',
       license='MIT',
-      url='https://github.com/brentp/combined-pvalues',
+      url='https://github.com/rorsgo/combined-pvalues',
       packages=['cpv', 'cpv.tests'],
       install_requires=['scipy', 'numpy', 'toolshed', 'interlap'],
       scripts=['cpv/comb-p'],
-      long_description=open('README.rst').read(),
+      long_description=open('README.md').read(),
       classifiers=["Topic :: Scientific/Engineering :: Bio-Informatics"],
  )
